@@ -1,0 +1,30 @@
+name: Build_Latest
+ 
+on: [push]
+ 
+jobs:
+  build:
+ 
+    runs-on: windows-latest
+ 
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v1
+     
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+     
+    - name: Restore NuGet Packages
+      run: nuget restore v2rayN\v2rayN.sln
+ 
+    - name: Build 
+      run: msbuild v2rayN\v2rayN.sln /p:Configuration=Release /p:DebugSymbols=false /p:DebugType=None
+ 
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: v2rayN_latest
+        path: v2rayN\v2rayN\bin\Release\
